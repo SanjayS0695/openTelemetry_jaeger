@@ -1,0 +1,32 @@
+version: "1.1"
+services:
+  service-a:
+    container_name: service-a
+    build:
+      context: ./Service-A
+      dockerfile: DockerFile
+    environment:
+      - OTEL_SERVICE_NAME=service-a
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=jaeger
+      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
+    ports:
+      - "9000:9000"
+  service-b:
+    container_name: service-b
+    build:
+      context: ./Service-B
+      dockerfile: DockerFile
+    environment:
+      - OTEL_SERVICE_NAME=service-b
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_TRACES_EXPORTER=jaeger
+      - OTEL_EXPORTER_JAEGER_ENDPOINT=http://jaeger:14250
+    ports:
+      - "9001:9001"
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14250:14250"
